@@ -12,20 +12,20 @@
             return;
         }
         this.config = {
-                 wrapId: config.id || 'p_carousel',       // 包裹容器ID
-              wrapWidth: config.wrapWidth || '600',       // 包裹容器宽度
-             wrapHeight: config.wrapHeight || '300',      // 包裹容器高度
-                 images: config.images || [],             // 图片src
-                  links: config.links || [],              // 图片对应的点击跳转地址
-              threshold: config.threshold || 0.1,         // 滑动触发阀值
-                buttons: config.buttons || true,          // 是否展示左右按钮
-              indicator: config.indicator || true,        // 是否显示圆点指示器
-                  color: config.color || '#fff',          // 圆点指示器颜色
-              slideTime: config.slideTime || 700,         // 滑动持续时间，毫秒
-               duration: config.duration || 4000,         // 每页停留时长，毫秒
-                  index: config.index || 0,               // 初始化页面下标
-               dotColor: config.dotColor || '#1593ff',    // 指示器选中颜色
-             dotBgColor: config.dotBgColor || '#e6ebed',  // 指示器背景颜色
+            wrapId: config.id || 'p_carousel',       // 包裹容器ID
+            wrapWidth: config.wrapWidth || '600',       // 包裹容器宽度
+            wrapHeight: config.wrapHeight || '300',      // 包裹容器高度
+            images: config.images || [],             // 图片src
+            links: config.links || [],              // 图片对应的点击跳转地址
+            threshold: config.threshold || 0.1,         // 滑动触发阀值
+            buttons: config.buttons || true,          // 是否展示左右按钮
+            indicator: config.indicator || true,        // 是否显示圆点指示器
+            color: config.color || '#fff',          // 圆点指示器颜色
+            slideTime: config.slideTime || 700,         // 滑动持续时间，毫秒
+            duration: config.duration || 4000,         // 每页停留时长，毫秒
+            index: config.index || 0,               // 初始化页面下标
+            dotColor: config.dotColor || '#1593ff',    // 指示器选中颜色
+            dotBgColor: config.dotBgColor || '#e6ebed',  // 指示器背景颜色
             controlsBtn: config.controlsBtn || []         // 翻页按钮图片链接
         };
 
@@ -185,10 +185,6 @@
             var dest = this.config.index === this.fragLength - 1 ? 0 : this.config.index + 1;
             this.slideTo(dest);
         },
-        goNext: function () {
-
-        },
-        goPrev: function () {},
         setTask: function () {
             var _this = this;
             // 分配任务的时刻
