@@ -344,6 +344,10 @@
                 _this.inSliding = false;
                 _this.hasDown = false;
                 _this.distX = 0;
+                _this.downTime = 0;
+                _this.touchX = 0;
+                // 优化尾页拖拽和定时任务的衔接过程
+                _this.config.index === 0 && _this.M(_this.wrap, -_this.wrapWidth);
                 !_this.taskTimer && _this.setTask();
             }, _this.config.slideTime)
         },
