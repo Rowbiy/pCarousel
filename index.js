@@ -24,8 +24,9 @@
               slideTime: config.slideTime || 700,         // 滑动持续时间，毫秒
                duration: config.duration || 2000,         // 每页停留时长，毫秒
                   index: config.index || 0,               // 初始化页面下标
-              indiColor: config.indiColor || '#1593ff',   // 指示器选中颜色
-            indiBgColor: config.indiBgColor || '#e6ebed', // 指示器背景颜色
+               dotColor: config.dotColor || '#1593ff',    // 指示器选中颜色
+             dotBgColor: config.dotBgColor || '#e6ebed',  // 指示器背景颜色
+            controlsBtn: config.controlsBtn || []         // 翻页按钮图片链接
         };
 
         // 生成分片页面
@@ -64,7 +65,7 @@
             }
             s.style.position = 'relative';
             s.style.height = 'auto';
-            // s.style.width = '600px';
+            s.style.width = '600px';
             s.style.overflow = 'hidden';
             return s;
         },
@@ -82,6 +83,7 @@
                 console.warn('Warning: The index is wrong, we set it to 0...');
                 this.config.index = 0;
             }
+
 
             // 生成包裹容器
             var c = this.G("#" + this.config.wrapId);
@@ -142,6 +144,10 @@
 
             this.wrap = f;
             c.appendChild(f);
+
+            if (this.config.controlsBtn.length === 2) {
+                this.addControls();
+            }
 
             // 生成翻页指示器
             this.setIndicator();
@@ -204,15 +210,15 @@
          * @param index
          */
         setIndicator: function (index) {
-            var indicator = document.getElementsByClassName('p-indicator')[0];
+            var indicator = document.getElementsByClassName('p-carousel-indicator')[0];
             if (indicator) {
                 for (var j = 0; j < this.fragLength; j++) {
-                    indicator.children[j].setAttribute('class', j === index ? 'p-active' : '')
-                    indicator.children[j].style.backgroundColor = j === index ? this.config.indiColor : this.config.indiBgColor;
+                    indicator.children[j].setAttribute('class', j === index ? 'p-active' : '');
+                    indicator.children[j].style.backgroundColor = j === index ? this.config.dotColor : this.config.dotBgColor;
                 }
             } else {
                 var d = document.createElement('div');
-                d.setAttribute('class', 'p-indicator');
+                d.setAttribute('class', 'p-carousel-indicator');
                 d.style.position = 'absolute';
                 d.style.bottom = '12px';
                 d.style.width = '100%';
@@ -226,20 +232,20 @@
                     s.style.borderRadius = '100%';
                     s.style.cursor = 'pointer';
                     s.style.transition = 'all .3s ease';
-                    s.style.backgroundColor = i === this.config.index ? this.config.indiColor : this.config.indiBgColor;
+                    s.style.backgroundColor = i === this.config.index ? this.config.dotColor : this.config.dotBgColor;
                     s.style.margin = '0 8px';
                     var that = this;
                     this.addEvent(s, 'mouseenter', function (e) {
-                        e.target.style.backgroundColor = that.config.indiColor;
+                        e.target.style.backgroundColor = that.config.dotColor;
                         e.stopPropagation();
                     });
                     this.addEvent(s, 'mouseout', function (e) {
                         e.stopPropagation();
                         if (that.inSliding) return;
                         if (e.target.className.indexOf('active') >= 0) {
-                            e.target.style.backgroundColor = that.config.indiColor;
+                            e.target.style.backgroundColor = that.config.dotColor;
                         } else {
-                            e.target.style.backgroundColor = that.config.indiBgColor;
+                            e.target.style.backgroundColor = that.config.dotBgColor;
                         }
 
                     });
@@ -370,6 +376,74 @@
             if (dist !== 0) {
                 this.M(this.wrap,  this.getDist(dist));
             }
+        },
+        /**
+         * 生成左右箭头
+         * @param null
+         */
+        addControls: function () {
+            var d = document.createElement('div');
+            d.setAttribute('class', 'p-carousel-controls');
+            d.style.position = 'absolute';
+            d.style.height = '32px';
+            d.style.width = '32px';
+            d.style.cursor = 'pointer';
+            d.style.top = '50%';
+            d.style.marginTop = '-16px';
+
+            var p = d.cloneNode(true);
+            d.className += ' left';
+            d.style.left = '5px';
+            p.className += ' right';
+            p.style.right = '5px';
+
+            var i = document.createElement('img');
+            i.style.width = '100%';
+            i.setAttribute('src', this.config.controlsBtn[0]);
+            d.appendChild(i);
+
+            var j = i.cloneNode(true);
+            j.setAttribute('src', this.config.controlsBtn[1]);
+            p.appendChild(j);
+
+            this.addEvent(d, 'click', this.controlsClick.bind(this));
+            this.addEvent(d, 'mouseenter', this.controlsEnter);
+            this.addEvent(d, 'mouseleave', this.controlsLeave);
+
+            this.addEvent(p, 'click', this.controlsClick.bind(this));
+            this.addEvent(p, 'mouseenter', this.controlsEnter);
+            this.addEvent(p, 'mouseleave', this.controlsLeave);
+
+            var c = this.G("#" + this.config.wrapId);
+            c.appendChild(d);
+            c.appendChild(p);
+        },
+        controlsEnter: function (e) {
+            e.target.style.transform = "scale(1.15)";
+            e.target.style.transition = "transform .1s ease";
+        },
+        controlsLeave: function (e) {
+            e.target.style.transform = "scale(1)";
+        },
+        /**
+         * 左右翻页按钮点击事件
+         * @param e
+         */
+        controlsClick: function (e) {
+            if (this.spanLock) return;
+            if (this.taskTimer) {
+                clearTimeout(this.taskTimer);
+                this.taskTimer = null;
+            }
+            var index = this.config.index;
+            var g;
+            if (e.target.className.indexOf('left') >= 0) {
+                g = index === 0 ? this.fragLength - 1 : index - 1;
+            } else {
+                g = index === this.fragLength - 1 ? 0 : index + 1;
+            }
+            this.slideTo(g);
+            e.stopPropagation();
         },
         /**
          * 获取实际偏移量
