@@ -22,7 +22,7 @@
               indicator: config.indicator || true,        // 是否显示圆点指示器
                   color: config.color || '#fff',          // 圆点指示器颜色
               slideTime: config.slideTime || 700,         // 滑动持续时间，毫秒
-               duration: config.duration || 2000,         // 每页停留时长，毫秒
+               duration: config.duration || 4000,         // 每页停留时长，毫秒
                   index: config.index || 0,               // 初始化页面下标
                dotColor: config.dotColor || '#1593ff',    // 指示器选中颜色
              dotBgColor: config.dotBgColor || '#e6ebed',  // 指示器背景颜色
@@ -65,7 +65,7 @@
             }
             s.style.position = 'relative';
             s.style.height = 'auto';
-            s.style.width = '600px';
+            // s.style.width = '600px';
             s.style.overflow = 'hidden';
             return s;
         },
